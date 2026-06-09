@@ -1,0 +1,1 @@
+//ini untuk definisi typesnya
