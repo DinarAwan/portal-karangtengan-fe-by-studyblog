@@ -1,46 +1,40 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { AuthContext } from './AuthContext';
-
-const ACCESS_TOKEN_KEY = 'accessToken';
-const REFRESH_TOKEN_KEY = 'refreshToken';
+import {
+  clearStoredAuthTokens,
+  getStoredAuthTokens,
+  setStoredAuthTokens,
+  subscribeAuthStorage,
+} from './authStorage';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(() =>
-    localStorage.getItem(ACCESS_TOKEN_KEY),
-  );
-  const [refreshToken, setRefreshToken] = useState<string | null>(() =>
-    localStorage.getItem(REFRESH_TOKEN_KEY),
-  );
+  const [tokens, setTokens] = useState(() => getStoredAuthTokens());
 
   const login = (newAccessToken: string, newRefreshToken?: string | null) => {
-    setAccessToken(newAccessToken);
-    localStorage.setItem(ACCESS_TOKEN_KEY, newAccessToken);
-
-    if (newRefreshToken) {
-      setRefreshToken(newRefreshToken);
-      localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
-    }
+    setStoredAuthTokens({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken ?? null,
+    });
   };
 
   const logout = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    clearStoredAuthTokens();
   };
+
+  useEffect(() => subscribeAuthStorage(setTokens), []);
 
   const value = useMemo(
     () => ({
-      accessToken,
-      refreshToken,
-      token: accessToken,
-      isAuthenticated: Boolean(accessToken),
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      token: tokens.accessToken,
+      isAuthenticated: Boolean(tokens.accessToken),
       login,
       logout,
     }),
-    [accessToken, refreshToken],
+    [tokens],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

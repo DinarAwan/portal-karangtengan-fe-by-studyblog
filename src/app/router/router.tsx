@@ -1,6 +1,11 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
+import { ProtectedRouter } from './ProtectedRouter';
 import { LoginPage } from '../../features/auth/pages/LoginPage';
+import { RegisterPage } from '../../features/auth/pages/RegisterPage';
+import { DashboardNawasenaPage } from '../../features/nawasena/dashboard/DashboardNawasenaPage';
+import { ScheduleNawasenaPage } from '../../features/nawasena/ScheduleNawasenaPage';
+import { NawasenaLayout } from '../../features/nawasena/layout/NawasenaLayout';
 import { BeritaPage } from '../../features/portal/berita/pages/BeritaPage';
 import { DashboardPage } from '../../features/portal/dashboard/pages/DashboardPage';
 import { InfografisPage } from '../../features/portal/infografis/pages/InfografisPage';
@@ -47,11 +52,30 @@ export const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <Navigate to="/" replace />,
+    element: <ProtectedRouter />,
+    children: [
+      {
+        element: <NawasenaLayout />,
+        children: [
+          {
+            index: true,
+            element: <DashboardNawasenaPage />,
+          },
+          {
+            path: 'schedule',
+            element: <ScheduleNawasenaPage />,
+          },
+        ],
+      },
+    ],
   },
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     path: '*',

@@ -1,32 +1,27 @@
-//ini sidebar
-import { NavLink } from 'react-router-dom';
-import { IconLayoutDashboard } from '@tabler/icons-react';
-
-const navigation = [
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: IconLayoutDashboard,
-  },
-];
-
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  [
-    'flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition',
-    isActive
-      ? 'bg-emerald-700 text-white shadow-sm'
-      : 'text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950',
-  ].join(' ');
+import { NavLink } from '@mantine/core';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { IconCalendarEvent, IconLayoutDashboard } from '@tabler/icons-react';
 
 const NavItems = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <>
-      {navigation.map((item) => (
-        <NavLink key={item.href} to={item.href} className={navLinkClass}>
-          <item.icon size={19} />
-          {item.label}
-        </NavLink>
-      ))}
+      <NavLink
+        active={location.pathname === '/dashboard'}
+        className="rounded-md"
+        label="Dashboard"
+        leftSection={<IconLayoutDashboard size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard')}
+      />
+      <NavLink
+        active={location.pathname.startsWith('/dashboard/schedule')}
+        className="rounded-md"
+        label="Schedule"
+        leftSection={<IconCalendarEvent size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard/schedule')}
+      />
     </>
   );
 };
@@ -38,10 +33,10 @@ export const Sidebar = () => {
         <div className="flex h-full flex-col">
           <div className="px-2">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-emerald-700">
-              Portal Desa
+              NAWASENA
             </p>
             <h2 className="mt-2 text-xl font-semibold text-neutral-950">
-              Karangtengah
+              Admin Panel
             </h2>
           </div>
 
