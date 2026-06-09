@@ -8,6 +8,7 @@ import {
   IconPhone,
   IconUsers,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 import { DashboardCard } from '../components/Card';
 
@@ -77,20 +78,20 @@ export const DashboardPage = () => {
               kontak desa secara cepat.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a
+              <Link
                 className="inline-flex h-11 items-center gap-2 rounded-md bg-emerald-700 px-4 text-sm font-semibold text-white transition hover:bg-emerald-800"
-                href="#layanan"
+                to="/berita"
               >
                 <IconFileCheck size={18} />
-                Layanan Desa
-              </a>
-              <a
+                Lihat Berita
+              </Link>
+              <Link
                 className="inline-flex h-11 items-center gap-2 rounded-md border border-neutral-300 bg-white px-4 text-sm font-semibold text-neutral-800 transition hover:bg-neutral-100"
-                href="#kontak"
+                to="/kontak"
               >
                 <IconPhone size={18} />
                 Kontak
-              </a>
+              </Link>
             </div>
           </div>
 
