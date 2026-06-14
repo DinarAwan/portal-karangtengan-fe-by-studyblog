@@ -1,6 +1,10 @@
 import { NavLink } from '@mantine/core';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IconCalendarEvent, IconLayoutDashboard } from '@tabler/icons-react';
+import {
+  IconCalendarEvent,
+  IconLayoutDashboard,
+  IconNews,
+} from '@tabler/icons-react';
 
 const NavItems = () => {
   const location = useLocation();
@@ -21,6 +25,13 @@ const NavItems = () => {
         label="Schedule"
         leftSection={<IconCalendarEvent size="1.1rem" stroke={1.5} />}
         onClick={() => navigate('/dashboard/schedule')}
+      />
+      <NavLink
+        active={location.pathname.startsWith('/dashboard/berita')}
+        className="rounded-md"
+        label="Berita"
+        leftSection={<IconNews size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard/berita')}
       />
     </>
   );
