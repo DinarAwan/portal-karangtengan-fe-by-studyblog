@@ -10,8 +10,11 @@ import { loginUser } from '../api/authApi';
 export const useAuthForm = (redirectTo = '/dashboard') => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('password');
+  
+  // Menggunakan default email & password untuk mempermudah testing
+  const [email, setEmail] = useState('admin@nawasena.id'); 
+  const [password, setPassword] = useState('admin1234');
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -22,7 +25,7 @@ export const useAuthForm = (redirectTo = '/dashboard') => {
 
     try {
       if (isApiReady) {
-        const response = await loginUser(username, password);
+        const response = await loginUser(email, password); // Gunakan email di sini
         const tokens = extractAuthTokens(response);
         login(tokens.accessToken ?? '', tokens.refreshToken);
       } else {
@@ -30,18 +33,18 @@ export const useAuthForm = (redirectTo = '/dashboard') => {
       }
 
       navigate(redirectTo, { replace: true });
-    } catch {
-      setErrorMessage(
-        'Login gagal. Periksa username, password, atau koneksi API.',
-      );
+    } catch (error: any) {
+      // Menangkap pesan error dari backend jika ada
+      const message = error.response?.data?.message || 'Login gagal. Periksa email, password, atau koneksi API.';
+      setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return {
-    username,
-    setUsername,
+    email, // Return email
+    setEmail,
     password,
     setPassword,
     isSubmitting,

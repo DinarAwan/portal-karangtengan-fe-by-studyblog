@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   IconArrowRight,
@@ -10,100 +11,52 @@ import {
 } from '@tabler/icons-react';
 
 import umkmBannerImage from '../../../../assets/umkm-banner-karangtengah.png';
+import { usePublicUmkm } from '../hooks/useUmkm';
 
-const categories = [
-  {
-    label: 'Makanan ringan',
-    description: 'Camilan dan olahan pangan warga.',
-    icon: IconPackage,
-    color: 'bg-[#F8CD24]/16 text-[#27441d]',
-  },
-  {
-    label: 'Minuman herbal',
-    description: 'Jamu, wedang, dan minuman sehat.',
-    icon: IconLeaf,
-    color: 'bg-[#72b841]/14 text-[#3D7A22]',
-  },
-  {
-    label: 'Kerajinan',
-    description: 'Anyaman, bambu, dan karya rumahan.',
-    icon: IconBuildingStore,
-    color: 'bg-[#72b841]/10 text-[#0F6B35]',
-  },
-  {
-    label: 'Fashion lokal',
-    description: 'Batik, jahit, dan produk sandang.',
-    icon: IconShoppingBag,
-    color: 'bg-[#1A3A68]/10 text-[#1A3A68]',
-  },
-  {
-    label: 'Hasil tani',
-    description: 'Produk segar dan olahan pertanian.',
-    icon: IconPlant2,
-    color: 'bg-[#72b841]/16 text-[#2F6D18]',
-  },
-  {
-    label: 'Jasa rumahan',
-    description: 'Layanan warga dan usaha keluarga.',
-    icon: IconUsers,
-    color: 'bg-[#F8F9FA] text-[#555555]',
-  },
-];
+// Helper: Generator style & icon dinamis berdasarkan nama kategori dari API
+const getCategoryConfig = (categoryName: string) => {
+  const name = categoryName.toLowerCase();
 
-const products = [
-  {
-    name: 'Keripik Singkong Karangtengah',
-    owner: 'Rumah Cemilan Lestari',
-    category: 'Makanan ringan',
-    price: 'Rp25.000',
-    badge: 'Terlaris',
-    imagePosition: '44% center',
-  },
-  {
-    name: 'Kopi Robusta Bukit Imogiri',
-    owner: 'Kopi Bukit Lestari',
-    category: 'Minuman',
-    price: 'Rp55.000',
-    badge: 'Favorit',
-    imagePosition: '55% center',
-  },
-  {
-    name: 'Madu Hutan Lokal',
-    owner: 'Madu Alam Desa',
-    category: 'Pangan lokal',
-    price: 'Rp85.000',
-    badge: 'Baru',
-    imagePosition: '70% center',
-  },
-  {
-    name: 'Batik Motif Sawah',
-    owner: 'Batik Tangan Desa',
-    category: 'Fashion lokal',
-    price: 'Rp150.000',
-    badge: 'Stok tersedia',
-    imagePosition: '64% bottom',
-  },
-  {
-    name: 'Jamu Kunyit Asam',
-    owner: 'Sehat Alami Desa',
-    category: 'Minuman herbal',
-    price: 'Rp20.000',
-    badge: 'Baru',
-    imagePosition: '83% center',
-  },
-  {
-    name: 'Anyaman Bambu',
-    owner: 'Karya Bambu Desa',
-    category: 'Kerajinan',
-    price: 'Rp45.000',
-    badge: 'Stok tersedia',
-    imagePosition: '94% center',
-  },
-];
+  if (name.includes('makanan')) {
+    return { icon: IconPackage, color: 'bg-[#F8CD24]/16 text-[#27441d]', desc: 'Camilan dan olahan pangan warga.' };
+  }
+  if (name.includes('minuman') || name.includes('herbal')) {
+    return { icon: IconLeaf, color: 'bg-[#72b841]/14 text-[#3D7A22]', desc: 'Jamu, wedang, dan minuman sehat.' };
+  }
+  if (name.includes('kerajinan')) {
+    return { icon: IconBuildingStore, color: 'bg-[#72b841]/10 text-[#0F6B35]', desc: 'Anyaman, bambu, dan karya rumahan.' };
+  }
+  if (name.includes('fashion') || name.includes('batik')) {
+    return { icon: IconShoppingBag, color: 'bg-[#1A3A68]/10 text-[#1A3A68]', desc: 'Batik, jahit, dan produk sandang.' };
+  }
+  if (name.includes('tani') || name.includes('pertanian')) {
+    return { icon: IconPlant2, color: 'bg-[#72b841]/16 text-[#2F6D18]', desc: 'Produk segar dan olahan pertanian.' };
+  }
+  
+  // Default fallback
+  return { icon: IconUsers, color: 'bg-[#F8F9FA] text-[#555555]', desc: 'Layanan warga dan usaha keluarga.' };
+};
 
 export const UmkmPage = () => {
+  const { data: umkms, isLoading } = usePublicUmkm();
+
+  // Ekstrak kategori unik dari data API dan buat config dinamisnya
+  const dynamicCategories = useMemo(() => {
+    if (!umkms || umkms.length === 0) return [];
+    
+    // Ambil string kategori yang unik
+    const uniqueCategories = Array.from(new Set(umkms.map((item) => item.category || 'Umum')));
+    
+    // Petakan ke config untuk dirender di UI
+    return uniqueCategories.map((cat) => ({
+      label: cat,
+      ...getCategoryConfig(cat),
+    }));
+  }, [umkms]);
+
   return (
     <div className="bg-white text-[#212529]">
+      {/* Hero Section (Tetap menggunakan banner statis untuk background atas) */}
       <section className="relative min-h-[690px] overflow-hidden px-4 pb-16 pt-32 sm:px-6 sm:pt-36 lg:min-h-[760px] lg:px-8 lg:pt-40">
         <img
           alt="Banner produk UMKM Desa Karang Tengah"
@@ -137,7 +90,7 @@ export const UmkmPage = () => {
                 Lihat produk
               </a>
               <Link
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#0F6B35]/20 bg-white/82 px-5 text-sm font-semibold text-[#0F6B35] shadow-[0_8px_22px_rgba(16,23,8,0.08)] backdrop-blur transition hover:border-[#0F6B35]/38 hover:bg-white"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#0F6B35]/20 bg-white/82 px-5 text-sm font-semibold text-[#0F6B35] shadow-[0_8px_22px_rgba(16,23,8,0.08)] backdrop-blur transition hover:border-[#0F6B35]/38 hover:bg-white"
                 to="/kontak"
               >
                 <IconBuildingStore size={18} />
@@ -148,6 +101,7 @@ export const UmkmPage = () => {
         </div>
       </section>
 
+      {/* Categories Section */}
       <section className="px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1440px]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -168,29 +122,42 @@ export const UmkmPage = () => {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {categories.map((category) => (
-              <article
-                className="min-h-[150px] rounded-[16px] border border-[#EFEFEF] bg-white p-5 shadow-[0_6px_18px_rgba(16,23,8,0.06)]"
-                key={category.label}
-              >
-                <div
-                  className={`grid h-12 w-12 place-items-center rounded-full ${category.color}`}
+          {isLoading ? (
+            <div className="mt-6 flex gap-3 overflow-hidden">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="min-h-[150px] w-full max-w-[200px] animate-pulse rounded-[16px] bg-[#F8F9FA]" />
+              ))}
+            </div>
+          ) : dynamicCategories.length > 0 ? (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+              {dynamicCategories.map((category) => (
+                <article
+                  className="min-h-[150px] rounded-[16px] border border-[#EFEFEF] bg-white p-5 shadow-[0_6px_18px_rgba(16,23,8,0.06)]"
+                  key={category.label}
                 >
-                  <category.icon size={23} stroke={1.7} />
-                </div>
-                <h3 className="mt-4 text-base font-bold leading-tight text-[#212529]">
-                  {category.label}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-[#6C757D]">
-                  {category.description}
-                </p>
-              </article>
-            ))}
-          </div>
+                  <div
+                    className={`grid h-12 w-12 place-items-center rounded-full ${category.color}`}
+                  >
+                    <category.icon size={23} stroke={1.7} />
+                  </div>
+                  <h3 className="mt-4 text-base font-bold leading-tight text-[#212529] capitalize">
+                    {category.label}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#6C757D]">
+                    {category.desc}
+                  </p>
+                </article>
+              ))}
+            </div>
+          ) : (
+             <div className="mt-6 rounded-[16px] border border-dashed border-[#EFEFEF] bg-white px-6 py-10 text-center">
+               <p className="text-sm font-semibold text-[#6C757D]">Belum ada kategori UMKM yang terdaftar.</p>
+             </div>
+          )}
         </div>
       </section>
 
+      {/* Products/UMKM Section */}
       <section
         className="px-4 py-10 sm:px-6 lg:px-8"
         id="produk-umkm"
@@ -206,55 +173,80 @@ export const UmkmPage = () => {
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-[#6C757D]">
-              Data produk ini masih contoh awal untuk tampilan. Nanti bisa
-              diganti dengan produk, foto, harga, dan nomor kontak UMKM asli.
+              Jelajahi berbagai UMKM dan produk berkualitas yang ditawarkan langsung oleh warga Desa Karangtengah.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map((product) => (
-              <article
-                className="group overflow-hidden rounded-[16px] border border-[#EFEFEF] bg-white shadow-[0_8px_24px_rgba(16,23,8,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(16,23,8,0.14)]"
-                key={product.name}
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-[#F8F9FA]">
-                  <img
-                    alt={product.name}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    src={umkmBannerImage}
-                    style={{ objectPosition: product.imagePosition }}
-                  />
-                  <div className="absolute left-3 top-3 rounded-full bg-[#0F6B35] px-3 py-1 text-[11px] font-bold text-white shadow-[0_8px_18px_rgba(16,23,8,0.18)]">
-                    {product.badge}
+          {isLoading ? (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  className="min-h-[340px] animate-pulse rounded-[16px] bg-[#F8F9FA]"
+                  key={`umkm-page-skeleton-${index}`}
+                />
+              ))}
+            </div>
+          ) : umkms.length > 0 ? (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {umkms.map((item) => (
+                <article
+                  className="group overflow-hidden rounded-[16px] border border-[#EFEFEF] bg-white shadow-[0_8px_24px_rgba(16,23,8,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(16,23,8,0.14)] flex flex-col"
+                  key={item.id}
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[#F8F9FA]">
+                    {item.coverUrl ? (
+                      <img
+                        alt={item.name}
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        src={item.coverUrl}
+                      />
+                    ) : (
+                      // Fallback murni tanpa dummy image
+                      <div className="flex h-full w-full items-center justify-center text-[#ADB5BD] transition duration-500 group-hover:scale-105">
+                        <IconBuildingStore size={48} stroke={1.2} />
+                      </div>
+                    )}
+                    <div className="absolute left-3 top-3 rounded-full bg-[#0F6B35] px-3 py-1 text-[11px] font-bold text-white shadow-[0_8px_18px_rgba(16,23,8,0.18)]">
+                      Tersedia
+                    </div>
                   </div>
-                </div>
-                <div className="p-5">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#72b841]">
-                    {product.category}
-                  </p>
-                  <h3 className="mt-2 text-lg font-bold leading-snug text-[#212529]">
-                    {product.name}
-                  </h3>
-                  <p className="mt-1 text-sm font-medium text-[#6C757D]">
-                    {product.owner}
-                  </p>
-                  <div className="mt-5 flex items-center justify-between gap-3">
-                    <p className="text-lg font-extrabold text-[#0F6B35]">
-                      {product.price}
+                  
+                  <div className="p-5 flex flex-col flex-1">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#72b841]">
+                      {item.category || 'Umum'}
                     </p>
-                    <Link
-                      aria-label={`Tanyakan ${product.name}`}
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#0F6B35]/18 bg-[#0F6B35]/8 px-4 text-sm font-semibold text-[#0F6B35] transition hover:bg-[#0F6B35] hover:text-white"
-                      to="/kontak"
-                    >
-                      Detail
-                      <IconArrowRight size={16} />
-                    </Link>
+                    <h3 className="mt-2 text-lg font-bold leading-snug text-[#212529]">
+                      {item.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-[#6C757D] flex-1">
+                      {item.ownerName}
+                    </p>
+                    
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#F8F9FA] pt-4">
+                      <p className="text-sm font-extrabold text-[#0F6B35]">
+                        {item.contactPhone || 'Hubungi UMKM'}
+                      </p>
+                      <Link
+                        aria-label={`Tanyakan ${item.name}`}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#0F6B35]/18 bg-[#0F6B35]/8 px-4 text-sm font-semibold text-[#0F6B35] transition hover:bg-[#0F6B35] hover:text-white"
+                        to={`https://wa.me/${item.contactPhone?.replace(/[^0-9]/g, '')}`}
+                        target="_blank"
+                      >
+                        Detail
+                        <IconArrowRight size={16} />
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[16px] border border-dashed border-[#EFEFEF] bg-white px-6 py-12 text-center">
+              <p className="text-sm font-semibold text-[#6C757D]">
+                Belum ada produk UMKM yang terdaftar saat ini.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 

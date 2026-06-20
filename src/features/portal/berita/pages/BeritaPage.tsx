@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   IconArrowRight,
-  IconBookmark,
-  IconBuildingStore,
   IconCalendarEvent,
   IconCategory,
   IconEye,
@@ -11,41 +10,26 @@ import {
   IconPlant2,
   IconSearch,
   IconUsers,
+  IconBuildingStore,
 } from '@tabler/icons-react';
 
-import { usePublicBerita } from '../../../berita/hooks/useBerita';
-import {
-  formatBeritaDate,
-  formatViews,
-} from '../../../berita/utils/formatBerita';
+import { usePublicBerita } from '../hooks/useBerita';
+import { formatBeritaDate, formatViews } from '../utils/formatBerita';
+import { PublicBeritaCard } from '../components/PublicBeritaCard'; // Import komponen baru
 
 const allCategory = 'Semua';
 
 const getCategoryIcon = (category: string) => {
   const normalizedCategory = category.toLowerCase();
-
-  if (normalizedCategory.includes('pertanian')) {
-    return IconPlant2;
-  }
-
-  if (normalizedCategory.includes('umkm')) {
-    return IconBuildingStore;
-  }
-
-  if (normalizedCategory.includes('kegiatan')) {
-    return IconUsers;
-  }
-
-  if (normalizedCategory.includes('layanan')) {
-    return IconFileCheck;
-  }
-
-  if (normalizedCategory === allCategory.toLowerCase()) {
-    return IconLayoutGrid;
-  }
-
+  if (normalizedCategory.includes('pertanian')) return IconPlant2;
+  if (normalizedCategory.includes('umkm')) return IconBuildingStore;
+  if (normalizedCategory.includes('kegiatan')) return IconUsers;
+  if (normalizedCategory.includes('layanan')) return IconFileCheck;
+  if (normalizedCategory === allCategory.toLowerCase()) return IconLayoutGrid;
   return IconCategory;
 };
+
+const PLACEHOLDER_IMAGE = 'https://placehold.co/800x450/e9f1e2/72b841?text=Desa+Karangtengah';
 
 export const BeritaPage = () => {
   const { data: beritaItems, isLoading } = usePublicBerita();
@@ -55,19 +39,23 @@ export const BeritaPage = () => {
   const categories = useMemo(
     () => [
       allCategory,
-      ...Array.from(new Set(beritaItems.map((item) => item.category))),
+      ...Array.from(new Set(beritaItems.map((item) => item.category || 'Umum'))),
     ],
     [beritaItems],
   );
+
   const filteredBerita = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
     return beritaItems.filter((item) => {
+      const itemCategory = item.category || 'Umum';
+      const itemAuthor = item.author || 'Admin';
+
       const matchesCategory =
-        activeCategory === allCategory || item.category === activeCategory;
+        activeCategory === allCategory || itemCategory === activeCategory;
       const matchesQuery =
         !normalizedQuery ||
-        [item.title, item.summary, item.category, item.author]
+        [item.title, item.excerpt, itemCategory, itemAuthor]
           .join(' ')
           .toLowerCase()
           .includes(normalizedQuery);
@@ -75,6 +63,7 @@ export const BeritaPage = () => {
       return matchesCategory && matchesQuery;
     });
   }, [activeCategory, beritaItems, query]);
+
   const featuredBerita = filteredBerita[0];
   const regularBerita = featuredBerita ? filteredBerita.slice(1) : [];
 
@@ -87,9 +76,9 @@ export const BeritaPage = () => {
         ) : featuredBerita ? (
           <section className="relative min-h-[430px] overflow-hidden rounded-[28px] bg-[#102112] shadow-[0_22px_58px_rgba(16,23,8,0.18)]">
             <img
-              alt={featuredBerita.coverImageAlt}
+              alt={featuredBerita.title}
               className="absolute inset-0 h-full w-full object-cover"
-              src={featuredBerita.coverImageUrl}
+              src={featuredBerita.coverUrl || PLACEHOLDER_IMAGE}
             />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,46,19,0.86)_0%,rgba(11,46,19,0.58)_44%,rgba(11,46,19,0.10)_62%,rgba(11,46,19,0.18)_100%)]" />
             <div className="absolute inset-y-0 right-0 w-full bg-[linear-gradient(90deg,rgba(7,18,5,0)_0%,rgba(7,18,5,0.88)_70%,rgba(7,18,5,0.94)_100%)] lg:w-[44%]" />
@@ -111,10 +100,7 @@ export const BeritaPage = () => {
                 </p>
 
                 <label className="mt-7 flex h-14 w-full max-w-[460px] items-center gap-3 rounded-full border border-white/70 bg-white px-5 text-sm text-[#687063] shadow-[0_18px_34px_rgba(16,23,8,0.16)] focus-within:ring-4 focus-within:ring-[#72b841]/24">
-                  <IconSearch
-                    className="shrink-0 text-[#72b841]"
-                    size={21}
-                  />
+                  <IconSearch className="shrink-0 text-[#72b841]" size={21} />
                   <input
                     className="h-full w-full bg-transparent text-[#212529] outline-none placeholder:text-[#87907f]"
                     onChange={(event) => setQuery(event.target.value)}
@@ -128,13 +114,13 @@ export const BeritaPage = () => {
               <article className="relative overflow-hidden rounded-[24px] border border-white/16 bg-white/[0.13] p-6 text-white shadow-[0_20px_54px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-8">
                 <span className="absolute bottom-8 left-0 top-16 w-1 rounded-r-full bg-[#72b841]" />
                 <p className="w-fit rounded-full bg-[#72b841]/78 px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-[#efffdc]">
-                  {featuredBerita.category}
+                  {featuredBerita.category || 'Umum'}
                 </p>
                 <h2 className="mt-5 text-2xl font-extrabold leading-tight sm:text-[30px]">
                   {featuredBerita.title}
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-white/82">
-                  {featuredBerita.summary}
+                  {featuredBerita.excerpt || 'Belum ada ringkasan.'}
                 </p>
 
                 <div className="mt-5 h-px bg-white/14" />
@@ -146,14 +132,18 @@ export const BeritaPage = () => {
                   </span>
                   <span className="inline-flex items-center gap-2">
                     <IconEye size={18} />
-                    {formatViews(featuredBerita.views)} dilihat
+                    {formatViews(featuredBerita.views || 0)} dilihat
                   </span>
                 </div>
 
-                <span className="mt-8 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#72b841] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(114,184,65,0.26)]">
+                {/* Diubah menjadi komponen Link yang mengarah ke slug */}
+                <Link
+                  to={`/berita/${featuredBerita.slug}`}
+                  className="mt-8 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#72b841] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(114,184,65,0.26)] transition hover:bg-[#62a23a]"
+                >
                   Baca Berita
                   <IconArrowRight size={18} />
-                </span>
+                </Link>
               </article>
             </div>
           </section>
@@ -222,51 +212,9 @@ export const BeritaPage = () => {
             </div>
           ) : regularBerita.length > 0 ? (
             <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {/* Mapping diubah jadi memanggil PublicBeritaCard */}
               {regularBerita.map((item) => (
-                <article
-                  className="group overflow-hidden rounded-[20px] border border-[#e5ecdf] bg-white shadow-[0_12px_32px_rgba(16,23,8,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(16,23,8,0.13)]"
-                  key={item.id}
-                >
-                  <div className="relative overflow-hidden bg-[#eef3e8]">
-                    <img
-                      alt={item.coverImageAlt}
-                      className="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-105"
-                      src={item.coverImageUrl}
-                    />
-                    <span className="absolute right-5 top-4 grid h-11 w-11 place-items-center rounded-full bg-white text-[#101708] shadow-[0_10px_24px_rgba(16,23,8,0.16)]">
-                      <IconBookmark size={19} stroke={1.8} />
-                    </span>
-                  </div>
-
-                  <div className="p-6">
-                    <p className="w-fit rounded-full bg-[#e6f4dc] px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-[#62a23a]">
-                      {item.category}
-                    </p>
-                    <h3 className="mt-4 line-clamp-2 text-xl font-extrabold leading-snug text-[#101708]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#626b5f]">
-                      {item.summary}
-                    </p>
-
-                    <div className="mt-7 flex flex-wrap items-center justify-between gap-4 text-sm text-[#6C757D]">
-                      <div className="flex flex-wrap gap-5">
-                        <span className="inline-flex items-center gap-2">
-                          <IconCalendarEvent size={16} />
-                          {formatBeritaDate(item.publishedAt)}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <IconEye size={16} />
-                          {formatViews(item.views)}
-                        </span>
-                      </div>
-                      <span className="inline-flex items-center gap-1.5 font-bold text-[#4f842f]">
-                        Baca selengkapnya
-                        <IconArrowRight size={16} />
-                      </span>
-                    </div>
-                  </div>
-                </article>
+                <PublicBeritaCard key={item.id} item={item} />
               ))}
             </div>
           ) : (

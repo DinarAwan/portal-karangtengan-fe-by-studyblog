@@ -15,6 +15,11 @@ import { NawasenaPage } from '../../features/portal/nawasena/pages/NawasenaPage'
 import { PertanianPage } from '../../features/portal/pertanian/pages/PertanianPage';
 import { UmkmPage } from '../../features/portal/umkm/pages/UmkmPage';
 import { DashboardLayout } from '../../shared/components/layout/DashboardLayout';
+import { AdminUmkmPage } from '../../features/nawasena/umkm/pages/AdminUmkmPage';
+import { AdminSchedulePage } from '../../features/nawasena/schedule/pages/AdminSchedulePage';
+import { AdminHarvestPage } from '../../features/nawasena/harvest/pages/AdminHarvestPage';
+import { AdminVillagePage } from '../../features/nawasena/village/pages/AdminVillagePage';
+import { BeritaDetailPage } from '../../features/portal/berita/pages/BeritaDetailPage';
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +54,10 @@ export const router = createBrowserRouter([
         path: 'kontak',
         element: <KontakPage />,
       },
+       {
+            path: 'berita/:slug',
+            element: <BeritaDetailPage />,
+          },
     ],
   },
   {
@@ -64,12 +73,25 @@ export const router = createBrowserRouter([
           },
           {
             path: 'schedule',
-            element: <ScheduleNawasenaPage />,
+            element: <AdminSchedulePage />,
           },
           {
             path: 'berita',
             element: <AdminBeritaPage />,
           },
+          {
+            path: 'umkm',
+            element: <AdminUmkmPage />,
+          },
+          {
+            path: 'harvest',
+            element: <AdminHarvestPage />,
+          },
+           {
+            path: 'village',
+            element: <AdminVillagePage />,
+          },
+         
         ],
       },
     ],

@@ -1,41 +1,17 @@
 export type LoginResponse = {
+  // Tipe ini dibuat fleksibel menyesuaikan fungsi extractAuthTokens
   accessToken?: string;
   refreshToken?: string;
   access_token?: string;
   refresh_token?: string;
-  token?: string;
-  access?: string;
-  refresh?: string;
-  data?: {
-    accessToken?: string;
-    refreshToken?: string;
-    access_token?: string;
-    refresh_token?: string;
-    token?: string;
-    access?: string;
-    refresh?: string;
-    tokens?: {
-      accessToken?: string;
-      refreshToken?: string;
-      access_token?: string;
-      refresh_token?: string;
-      token?: string;
-      access?: string;
-      refresh?: string;
-    };
-  };
   tokens?: {
-    accessToken?: string;
-    refreshToken?: string;
-    access_token?: string;
-    refresh_token?: string;
-    token?: string;
-    access?: string;
-    refresh?: string;
+    access?: { token: string };
+    refresh?: { token: string };
   };
+  [key: string]: any; 
 };
 
 export type AuthFormState = {
-  username: string;
+  email: string; // Diubah dari username
   password: string;
 };

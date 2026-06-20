@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import {
+import { useEffect, useRef, useState, useMemo } from 'react';import {
   IconArrowRight,
   IconBuildingCommunity,
   IconBuildingStore,
@@ -17,9 +16,8 @@ import {
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
-import { selectHomepageBerita } from '../../../berita/api/beritaApi';
-import { usePublicBerita } from '../../../berita/hooks/useBerita';
-import { formatBeritaDate } from '../../../berita/utils/formatBerita';
+import { usePublicBerita } from '../../../portal/berita/hooks/useBerita';
+import { formatBeritaDate } from '../../../nawasena/berita/utils/formatBerita';
 import kepalaDesaImage from '../../../../assets/kepala-desa.png';
 import villageSawahImage from '../../../../assets/karangtengah-sawah.jpg';
 import pemudaDesaImage from '../../../../assets/pemuda-desa.png';
@@ -115,7 +113,7 @@ const leadershipValues = [
   },
   {
     title: 'Berkelanjutan',
-    detail: 'Pembangunan berkelanjutan untuk desa yang hijau dan mandiri.',
+    detail: 'Pembangunan berkelanjutan untuk desa yang hijau and mandiri.',
     icon: IconPlant2,
   },
 ];
@@ -262,9 +260,14 @@ const AnimatedNumber = ({
   );
 };
 
+const PLACEHOLDER_IMAGE = 'https://placehold.co/800x450/e9f1e2/72b841?text=Desa+Karangtengah';
+
 export const DashboardPage = () => {
   const { data: beritaItems, isLoading: isBeritaLoading } = usePublicBerita();
-  const homepageBerita = selectHomepageBerita(beritaItems);
+
+  const homepageBerita = useMemo(() => {
+    return beritaItems.slice(0, 5);
+  }, [beritaItems]);
 
   return (
     <div className="bg-white">
@@ -295,10 +298,10 @@ export const DashboardPage = () => {
 
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                     <Link
-                      className="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#4f842f] bg-[#4f842f] px-4 text-xs font-bold text-white shadow-[0_10px_24px_rgba(79,132,47,0.24)] ring-1 ring-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#416f27] sm:text-sm"
+                      className="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#4f842f] bg-[#4f842f] px-4 text-xs font-bold text-white shadow-[0_10px_24px_rgba(79,132,47,0.24)] ring-1 ring-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#4f842f]/90 sm:text-sm"
                       to="/infografis"
                     >
-                      Lihat Infografis
+                      See Infografis
                       <IconArrowRight size={16} />
                     </Link>
 
@@ -335,10 +338,10 @@ export const DashboardPage = () => {
             <div className="village-stats-grid">
               {stats.map((item) => (
                 <article className="village-stat-item" key={item.title}>
-                  <div className="village-stat-icon">
+                  <div className="village-stats-icon">
                     <item.icon size={35} stroke={1.75} />
                   </div>
-                  <p className="village-stat-value">
+                  <div className="village-stat-value">
                     <strong>{item.value}</strong>
                     <span>{item.unit}</span>
                     {'secondaryValue' in item ? (
@@ -348,7 +351,7 @@ export const DashboardPage = () => {
                         <span>{item.secondaryUnit}</span>
                       </>
                     ) : null}
-                  </p>
+                  </div>
                   <span className="village-stat-accent" />
                   <p className="village-stat-label">{item.title}</p>
                 </article>
@@ -369,7 +372,7 @@ export const DashboardPage = () => {
           viewBox="0 0 300 300"
         >
           <path d="M22 88c44-54 126-72 190-35 42 25 62 75 45 118-18 46-70 74-123 68-54-7-95-47-105-94-4-20-1-40 11-57" />
-          <path d="M46 98c34-42 99-56 150-27 34 20 50 59 37 93-14 36-55 59-97 54-43-5-76-37-84-75-3-16 0-31 9-45" />
+          <path d="M26 98c34-42 99-56 150-27 34 20 50 59 37 93-14 36-55 59-97 54-43-5-76-37-84-75-3-16 0-31 9-45" />
           <path d="M72 108c25-30 72-40 109-19 25 15 37 44 27 69-10 27-40 44-72 40-31-4-56-27-62-55-2-12 0-24 7-35" />
           <path d="M98 119c15-18 44-24 67-11 15 9 22 27 17 42-7 17-25 27-44 25-19-2-34-16-38-34-1-7 0-15 5-22" />
           <path d="M121 130c8-10 24-13 36-6 8 5 12 14 9 22-3 9-13 15-23 13-10-1-18-8-20-18-1-4 0-8 3-11" />
@@ -480,7 +483,7 @@ export const DashboardPage = () => {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
+      <section className="px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1440px]">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="service-editorial-title text-4xl font-extrabold leading-tight text-[#101708] sm:text-5xl lg:text-[56px]">
@@ -497,12 +500,6 @@ export const DashboardPage = () => {
                 className="flex min-h-[390px] flex-col rounded-lg bg-[#F7F7F4] p-5 shadow-[0_10px_30px_rgba(16,23,8,0.05)] ring-1 ring-black/[0.03]"
                 key={service.title}
               >
-                {index % 2 === 0 ? (
-                  <p className="service-card-number text-5xl italic leading-none text-[#7b7b7b]">
-                    {service.number}
-                  </p>
-                ) : null}
-
                 <div className={index % 2 === 0 ? 'mt-12' : ''}>
                   <img
                     alt={service.imageAlt}
@@ -520,12 +517,6 @@ export const DashboardPage = () => {
                 <p className="mt-3 text-sm leading-6 text-[#555555]">
                   {service.detail}
                 </p>
-
-                {index % 2 === 1 ? (
-                  <p className="service-card-number mt-auto pt-8 text-5xl italic leading-none text-[#7b7b7b]">
-                    {service.number}
-                  </p>
-                ) : null}
               </article>
             ))}
           </div>
@@ -555,7 +546,7 @@ export const DashboardPage = () => {
                     <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#72b841]/10 text-[#72b841]">
                       <item.icon size={26} stroke={1.7} />
                     </div>
-                    <p className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap text-4xl font-extrabold leading-none tracking-[0.2px] text-[#27441d] sm:text-[42px] xl:text-5xl">
+                    <div className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap text-4xl font-extrabold leading-none tracking-[0.2px] text-[#27441d] sm:text-[42px] xl:text-5xl">
                       <AnimatedNumber
                         className="inline-block whitespace-nowrap tabular-nums"
                         prefix={item.prefix}
@@ -567,7 +558,7 @@ export const DashboardPage = () => {
                           {item.unit}
                         </span>
                       ) : null}
-                    </p>
+                    </div>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[#212529]">
                     {item.label}
@@ -592,6 +583,7 @@ export const DashboardPage = () => {
         </div>
       </section>
 
+      {/* Bagian Berita Utama Dashboard */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1440px]">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -616,7 +608,7 @@ export const DashboardPage = () => {
 
           {isBeritaLoading ? (
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 5 }).map((_, index) => (
+              {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   className={[
                     'animate-pulse rounded-[16px] bg-[#eef3e8]',
@@ -637,17 +629,19 @@ export const DashboardPage = () => {
                     index === 0 ? 'md:col-span-2' : '',
                   ].join(' ')}
                   key={item.id}
-                  to="/berita"
+                  // Mengarahkan ke rute detail berita secara dinamis menggunakan slug
+                  to={`/berita/${item.slug}`}
                 >
                   <img
-                    alt={item.coverImageAlt}
+                    alt={item.title}
                     className={[
                       'w-full object-cover transition duration-500 group-hover:scale-105',
                       index === 0
                         ? 'aspect-[16/9] min-h-[340px] lg:min-h-[380px]'
                         : 'aspect-[4/3] min-h-[300px]',
                     ].join(' ')}
-                    src={item.coverImageUrl}
+                    // Penyesuaian properti coverUrl dari API publik
+                    src={item.coverUrl || PLACEHOLDER_IMAGE}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,8,0)_18%,rgba(16,23,8,0.2)_48%,rgba(16,23,8,0.76)_100%)]" />
 
@@ -665,7 +659,7 @@ export const DashboardPage = () => {
                         index === 0 ? 'text-white/88' : 'text-[#212529]/70',
                       ].join(' ')}
                     >
-                      {item.category}
+                      {item.category || 'Umum'}
                     </p>
                     <h3
                       className={[
@@ -679,7 +673,8 @@ export const DashboardPage = () => {
                     </h3>
                     {index === 0 ? (
                       <p className="mt-3 max-w-2xl text-sm leading-6 text-white/78">
-                        {item.summary}
+                        {/* Penyesuaian properti excerpt dari API publik */}
+                        {item.excerpt || 'Belum ada ringkasan.'}
                       </p>
                     ) : null}
                     <p

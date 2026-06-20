@@ -33,6 +33,27 @@ const NavItems = () => {
         leftSection={<IconNews size="1.1rem" stroke={1.5} />}
         onClick={() => navigate('/dashboard/berita')}
       />
+      <NavLink
+        active={location.pathname.startsWith('/dashboard/umkm')}
+        className="rounded-md"
+        label="UMKM"
+        leftSection={<IconNews size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard/umkm')}
+      />
+      <NavLink
+        active={location.pathname.startsWith('/dashboard/harvest')}
+        className="rounded-md"
+        label="Data Panen"
+        leftSection={<IconNews size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard/harvest')}
+      />
+      <NavLink
+        active={location.pathname.startsWith('/dashboard/village')}
+        className="rounded-md"
+        label="Prifile Desa"
+        leftSection={<IconNews size="1.1rem" stroke={1.5} />}
+        onClick={() => navigate('/dashboard/village')}
+      />
     </>
   );
 };

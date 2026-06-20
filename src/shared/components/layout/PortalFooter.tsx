@@ -62,7 +62,8 @@ export const PortalFooter = ({
   return (
     <footer
       className={[
-        'min-h-screen overflow-hidden bg-[#030904] text-white',
+        // Hapus 'min-h-screen' dari sini agar tinggi footer menyesuaikan konten
+        'overflow-hidden bg-[#030904] text-white',
         className,
       ]
         .filter(Boolean)
@@ -93,7 +94,7 @@ export const PortalFooter = ({
           </div>
         </div>
 
-        <div className="relative px-5 pb-12 pt-16 sm:px-8 lg:px-12 lg:pb-16 lg:pt-20">
+        <div className="relative px-5 pb-0 pt-16 sm:px-8 lg:px-12 lg:pb-0 lg:pt-20">
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[1.25fr_0.8fr_0.8fr_1fr]">
             <div>
               <Link className="inline-flex items-center gap-3" to="/">
@@ -181,6 +182,7 @@ export const PortalFooter = ({
             <p>Informasi, layanan, dan potensi lokal.</p>
           </div>
 
+          {/* Bagian Wordmark yang menjadi batas akhir footer */}
           <div className="footer-wordmark-stage mt-8 overflow-hidden">
             <p className="footer-wordmark footer-wordmark-main text-white">
               {wordmarkLetters.map((letter, index) => (

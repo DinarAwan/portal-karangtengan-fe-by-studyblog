@@ -1,76 +1,79 @@
-import { IconArrowRight, IconLock, IconUser } from '@tabler/icons-react';
+import { TextInput, PasswordInput, Button, Alert, Paper, Text, Title } from '@mantine/core';
+import { IconArrowRight, IconLock, IconMail, IconAlertCircle } from '@tabler/icons-react';
 import type { FormEvent } from 'react';
 
 type FormLoginProps = {
-  username: string;
+  email: string;
   password: string;
   isSubmitting: boolean;
   errorMessage: string | null;
-  onUsernameChange: (value: string) => void;
+  onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
 export const FormLogin = ({
-  username,
+  email,
   password,
   isSubmitting,
   errorMessage,
-  onUsernameChange,
+  onEmailChange,
   onPasswordChange,
   onSubmit,
 }: FormLoginProps) => {
   return (
-    <form onSubmit={onSubmit} className="p-6 sm:p-8">
-      <div>
-        <p className="text-sm font-medium uppercase tracking-[0.16em] text-emerald-700">
+    <Paper className="flex h-full flex-col justify-center p-6 sm:p-8" radius={0} bg="transparent">
+      <div className="mb-8">
+        <Text size="sm" fw={500} tt="uppercase" ls="0.16em" c="teal.7">
           Dashboard
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold text-neutral-950">
+        </Text>
+        <Title order={2} mt="xs" c="dark.9">
           Masuk Portal
-        </h2>
+        </Title>
       </div>
 
-      <label className="mt-8 block text-sm font-medium text-neutral-700">
-        Username
-        <span className="mt-2 flex h-11 items-center gap-3 rounded-md border border-neutral-300 bg-white px-3 focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-100">
-          <IconUser size={18} className="text-neutral-500" />
-          <input
-            className="h-full flex-1 border-0 bg-transparent text-sm outline-none"
-            value={username}
-            onChange={(event) => onUsernameChange(event.target.value)}
-            type="text"
-          />
-        </span>
-      </label>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+        <TextInput
+          label="Email"
+          placeholder="Masukkan email Anda"
+          leftSection={<IconMail size={18} className="text-neutral-500" />}
+          value={email}
+          onChange={(event) => onEmailChange(event.currentTarget.value)}
+          type="email"
+          required
+          size="md"
+          classNames={{ input: 'focus:border-teal-600' }}
+        />
 
-      <label className="mt-4 block text-sm font-medium text-neutral-700">
-        Password
-        <span className="mt-2 flex h-11 items-center gap-3 rounded-md border border-neutral-300 bg-white px-3 focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-100">
-          <IconLock size={18} className="text-neutral-500" />
-          <input
-            className="h-full flex-1 border-0 bg-transparent text-sm outline-none"
-            value={password}
-            onChange={(event) => onPasswordChange(event.target.value)}
-            type="password"
-          />
-        </span>
-      </label>
+        <PasswordInput
+          label="Password"
+          placeholder="Masukkan password Anda"
+          leftSection={<IconLock size={18} className="text-neutral-500" />}
+          value={password}
+          onChange={(event) => onPasswordChange(event.currentTarget.value)}
+          required
+          size="md"
+          classNames={{ input: 'focus:border-teal-600' }}
+        />
 
-      {errorMessage ? (
-        <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-          {errorMessage}
-        </p>
-      ) : null}
+        {errorMessage && (
+          <Alert icon={<IconAlertCircle size={16} />} title="Gagal Masuk" color="red" variant="light" mt="sm">
+            {errorMessage}
+          </Alert>
+        )}
 
-      <button
-        className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-emerald-700 px-4 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-neutral-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
-        disabled={isSubmitting}
-        type="submit"
-      >
-        {isSubmitting ? 'Memproses...' : 'Masuk'}
-        <IconArrowRight size={18} />
-      </button>
-    </form>
+        <Button
+          type="submit"
+          loading={isSubmitting}
+          rightSection={<IconArrowRight size={18} />}
+          color="teal.7"
+          size="md"
+          mt="md"
+          fullWidth
+        >
+          Masuk
+        </Button>
+      </form>
+    </Paper>
   );
 };

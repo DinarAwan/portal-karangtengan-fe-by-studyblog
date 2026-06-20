@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { fetchAdminBerita, fetchPublicBerita } from '../api/beritaApi';
-import type { BeritaItem } from '../types/berita';
+import { fetchAdminBerita, fetchPublicBerita } from '../../../berita/api/beritaApi';
+import type { BeritaItem } from '../../../berita/types/berita';
 
 type BeritaState = {
   data: BeritaItem[];

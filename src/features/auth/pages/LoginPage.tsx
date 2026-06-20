@@ -19,8 +19,8 @@ export const LoginPage = () => {
   const redirectTo = from === '/login' ? '/dashboard' : from;
 
   const {
-    username,
-    setUsername,
+    email, // Ambil email dari hooks
+    setEmail,
     password,
     setPassword,
     isSubmitting,
@@ -66,9 +66,9 @@ export const LoginPage = () => {
             isSubmitting={isSubmitting}
             onPasswordChange={setPassword}
             onSubmit={handleLogin}
-            onUsernameChange={setUsername}
+            onEmailChange={setEmail} // Pasing setEmail ke komponen
             password={password}
-            username={username}
+            email={email} // Pasing email ke komponen
           />
         </section>
       </div>
