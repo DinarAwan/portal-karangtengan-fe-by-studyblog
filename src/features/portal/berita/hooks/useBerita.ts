@@ -13,7 +13,6 @@ export const usePublicBerita = () => {
         const response = await fetchPublicBerita();
         
         if (response.success) {
-          // Menyesuaikan jika data ada di response.data langsung atau response.data.items
           const items = Array.isArray(response.data) ? response.data : (response.data?.items || []);
           setData(items);
         }
@@ -42,7 +41,6 @@ export const usePublicBeritaDetail = (slug: string | undefined) => {
       try {
         setIsLoading(true);
         setError(null);
-        // Memanggil API detail berdasarkan slug
         const response = await fetchPublicBeritaBySlug(slug);
         
         if (response.success) {

@@ -6,7 +6,6 @@ export type PublicBeritaItem = {
   coverUrl: string | null;
   publishedAt: string;
   
-  // Optional fallback properties
   category?: string;
   views?: number;
   author?: string;
@@ -14,7 +13,6 @@ export type PublicBeritaItem = {
 
 export type PublicBeritaResponse = {
   success: boolean;
-  // Menangani kemungkinan response berupa array langsung atau object { items: [] }
   data: PublicBeritaItem[] | { items: PublicBeritaItem[] };
 };
 

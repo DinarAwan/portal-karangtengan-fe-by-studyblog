@@ -30,7 +30,6 @@ export const useAdminVillage = () => {
     getVillage();
   }, [getVillage]);
 
-  // Update Profil Desa
   const handleUpdateProfile = async (payload: VillagePayload) => {
     try {
       setIsMutating(true);
@@ -44,20 +43,13 @@ export const useAdminVillage = () => {
     }
   };
 
-  // Tambah Galeri (2 Step: Upload File -> Create Record)
   const handleAddGallery = async (file: File, caption: string, orderIndex: number) => {
     try {
       setIsMutating(true);
-      // Step 1: Upload File
       const uploadRes = await uploadGalleryImage(file);
-      
-      // Asumsi backend mereturn URL gambar dari endpoint upload (misal: uploadRes.data.url)
-      // Jika strukturnya berbeda, sesuaikan properti aksesnya di sini.
       const imageUrl = uploadRes.data?.url || uploadRes.imageUrl || uploadRes.url || '';
 
       if (!imageUrl) throw new Error('Gagal mendapatkan URL gambar dari server.');
-
-      // Step 2: Simpan Data Galeri
       await addGalleryItem({ imageUrl, caption, orderIndex });
       await getVillage();
     } catch (err: any) {

@@ -7,10 +7,8 @@ import { formatBeritaDate, formatViews } from '../utils/formatBerita';
 const PLACEHOLDER_IMAGE = 'https://placehold.co/1200x600/e9f1e2/72b841?text=Desa+Karangtengah';
 
 export const BeritaDetailPage = () => {
-  // Mengambil slug dari URL (misal: /berita/sosialisasi-akbar)
   const { slug } = useParams<{ slug: string }>();
   
-  // Menggunakan custom hook untuk memanggil API
   const { data: berita, isLoading, error } = usePublicBeritaDetail(slug);
 
   if (isLoading) {

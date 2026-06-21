@@ -27,21 +27,17 @@ export const useAdminBerita = () => {
     getBerita();
   }, [getBerita]);
 
-  // Fungsi Tambah Berita
 const handleCreate = async (payload: BeritaPayload, file: File | null) => {
     try {
       setIsMutating(true);
-      // 1. Buat berita (teks) terlebih dahulu
       const response = await createAdminBerita(payload);
       
-      // 2. Jika berita sukses dibuat dan user melampirkan file gambar
       if (response.success && file) {
         const newBeritaId = response.data.id;
-        // Upload gambar menggunakan ID berita yang baru saja dibuat
         await uploadBeritaCover(newBeritaId, file);
       }
       
-      await getBerita(); // Refresh data
+      await getBerita();
     } catch (err: any) {
       const apiError = err.response?.data?.error;
       if (apiError && Array.isArray(apiError.message)) {
@@ -57,15 +53,13 @@ const handleCreate = async (payload: BeritaPayload, file: File | null) => {
   const handleUpdate = async (id: string, payload: BeritaPayload, file: File | null) => {
     try {
       setIsMutating(true);
-      // 1. Update data teks
       await updateAdminBerita(id, payload);
       
-      // 2. Jika user juga memilih gambar baru saat mengedit, timpa gambar lama
       if (file) {
         await uploadBeritaCover(id, file);
       }
       
-      await getBerita(); // Refresh data
+      await getBerita();
     } catch (err: any) {
       const apiError = err.response?.data?.error;
       if (apiError && Array.isArray(apiError.message)) {
@@ -77,7 +71,6 @@ const handleCreate = async (payload: BeritaPayload, file: File | null) => {
       setIsMutating(false);
     }
   };
-  // Fungsi Delete Berita
   const handleDelete = async (id: string) => {
     if (!window.confirm('Apakah Anda yakin ingin menghapus berita ini?')) return;
     try {
@@ -88,13 +81,11 @@ const handleCreate = async (payload: BeritaPayload, file: File | null) => {
     }
   };
 
-  // Fungsi Ubah Status Rilis
  const handleTogglePublish = async (id: string) => {
     if (!window.confirm(`Apakah Anda yakin ingin mempublikasikan / mengubah status berita ini?`)) return;
     try {
-      // Hanya mengirimkan ID sesuai format API
       await publishAdminBerita(id);
-      await getBerita(); // Refetch data
+      await getBerita();
     } catch (err: any) {
       const apiError = err.response?.data?.error;
       alert(apiError?.message || 'Gagal mengubah status berita.');

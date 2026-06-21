@@ -13,7 +13,6 @@ import {
 import umkmBannerImage from '../../../../assets/umkm-banner-karangtengah.png';
 import { usePublicUmkm } from '../hooks/useUmkm';
 
-// Helper: Generator style & icon dinamis berdasarkan nama kategori dari API
 const getCategoryConfig = (categoryName: string) => {
   const name = categoryName.toLowerCase();
 
@@ -33,21 +32,17 @@ const getCategoryConfig = (categoryName: string) => {
     return { icon: IconPlant2, color: 'bg-[#72b841]/16 text-[#2F6D18]', desc: 'Produk segar dan olahan pertanian.' };
   }
   
-  // Default fallback
   return { icon: IconUsers, color: 'bg-[#F8F9FA] text-[#555555]', desc: 'Layanan warga dan usaha keluarga.' };
 };
 
 export const UmkmPage = () => {
   const { data: umkms, isLoading } = usePublicUmkm();
 
-  // Ekstrak kategori unik dari data API dan buat config dinamisnya
   const dynamicCategories = useMemo(() => {
     if (!umkms || umkms.length === 0) return [];
     
-    // Ambil string kategori yang unik
     const uniqueCategories = Array.from(new Set(umkms.map((item) => item.category || 'Umum')));
     
-    // Petakan ke config untuk dirender di UI
     return uniqueCategories.map((cat) => ({
       label: cat,
       ...getCategoryConfig(cat),
@@ -56,7 +51,6 @@ export const UmkmPage = () => {
 
   return (
     <div className="bg-white text-[#212529]">
-      {/* Hero Section (Tetap menggunakan banner statis untuk background atas) */}
       <section className="relative min-h-[690px] overflow-hidden px-4 pb-16 pt-32 sm:px-6 sm:pt-36 lg:min-h-[760px] lg:px-8 lg:pt-40">
         <img
           alt="Banner produk UMKM Desa Karang Tengah"

@@ -40,7 +40,6 @@ export type SingleUmkmResponse = {
   data: UmkmItem;
 };
 
-// Payload untuk POST dan PUT
 export type UmkmPayload = {
   name: string;
   ownerName: string;

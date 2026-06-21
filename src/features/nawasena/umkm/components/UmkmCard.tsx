@@ -1,5 +1,5 @@
-import { IconBuildingStore, IconEdit, IconMapPin, IconPhone, IconPhoto, IconTag, IconTrash, IconUpload } from '@tabler/icons-react';
-import type { UmkmItem, UmkmStatus } from '../types/umkm';
+import { IconBuildingStore, IconEdit, IconMapPin, IconPhone, IconTag, IconTrash, IconUpload } from '@tabler/icons-react';
+import type { UmkmItem } from '../types/umkm';
 import { formatRupiah } from '../utils/formatUmkm';
 
 type UmkmCardProps = {

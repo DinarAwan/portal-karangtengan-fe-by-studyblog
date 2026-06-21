@@ -1,5 +1,5 @@
 import api from '../../../../api/axios';
-import type { UmkmItem, UmkmPayload, UmkmResponse, SingleUmkmResponse } from '../types/umkm';
+import type { UmkmPayload, UmkmResponse, SingleUmkmResponse } from '../types/umkm';
 
 export const fetchAdminUmkm = async (): Promise<UmkmResponse> => {
   const response = await api.get('/v1/cms/umkm');
@@ -23,7 +23,6 @@ export const deleteAdminUmkm = async (id: string): Promise<{ success: boolean }>
 
 export const uploadUmkmCover = async (id: string, file: File): Promise<SingleUmkmResponse> => {
   const formData = new FormData();
-  // Catatan: Jika error "Unexpected field", ganti 'file' menjadi sesuai request backend-mu (misal 'cover')
   formData.append('file', file); 
   const response = await api.post(`/v1/cms/umkm/${id}/cover`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
@@ -32,7 +31,6 @@ export const uploadUmkmCover = async (id: string, file: File): Promise<SingleUmk
 };
 
 export const publishAdminUmkm = async (id: string): Promise<SingleUmkmResponse> => {
-  // Sesuai swagger, PATCH publish tidak butuh request body
   const response = await api.patch(`/v1/cms/umkm/${id}/publish`);
   return response.data;
 };

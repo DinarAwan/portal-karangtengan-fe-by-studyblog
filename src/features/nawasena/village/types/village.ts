@@ -7,7 +7,7 @@ export type VillageStats = {
   area_ha: number;
   families: number;
   population: number;
-  farmer_families?: number; // dari GET
+  farmer_families?: number;
 };
 
 export type VillageGalleryItem = {

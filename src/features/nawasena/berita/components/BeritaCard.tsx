@@ -1,6 +1,6 @@
-import { IconCalendarEvent, IconEdit, IconEye, IconHomeStats, IconPhoto, IconTag, IconTrash, IconUpload, IconWorld } from '@tabler/icons-react';
-import type { BeritaItem, BeritaStatus, BeritaHomepagePlacement } from '../types/berita';
-import { formatBeritaDate, formatViews, getHomepagePlacementLabel, getStatusLabel } from '../utils/formatBerita';
+import { IconCalendarEvent, IconEdit, IconEye, IconPhoto, IconTag, IconTrash, IconUpload } from '@tabler/icons-react';
+import type { BeritaItem, BeritaStatus } from '../types/berita';
+import { formatBeritaDate, formatViews, getStatusLabel } from '../utils/formatBerita';
 
 type BeritaCardProps = {
   article: BeritaItem;
@@ -17,11 +17,11 @@ const getStatusClass = (status: BeritaStatus) => {
   return 'bg-neutral-100 text-neutral-600';
 };
 
-const getPlacementClass = (placement: BeritaHomepagePlacement) => {
-  if (placement === 'featured') return 'border-[#f8cd24]/50 bg-[#fff8d8] text-[#8a6500]';
-  if (placement === 'supporting') return 'border-emerald-200 bg-emerald-50 text-emerald-700';
-  return 'border-neutral-200 bg-neutral-50 text-neutral-500';
-};
+// const getPlacementClass = (placement: BeritaHomepagePlacement) => {
+//   if (placement === 'featured') return 'border-[#f8cd24]/50 bg-[#fff8d8] text-[#8a6500]';
+//   if (placement === 'supporting') return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+//   return 'border-neutral-200 bg-neutral-50 text-neutral-500';
+// };
 
 export const BeritaCard = ({ article, onDelete, onEdit, onTogglePublish, onUploadCover }: BeritaCardProps) => {
   return (

@@ -1,89 +1,37 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  IconLayersIntersect,
-  IconMinus,
-  IconPlus,
-  IconTarget,
-} from '@tabler/icons-react';
+import { useEffect, useRef } from 'react';
+import { IconMinus, IconPlus, IconTarget } from '@tabler/icons-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import {
-  devices,
-  fieldPlots,
-  heatPoints,
-  mapConfig,
-  roverPath,
-  type FieldDevice,
-  type FieldStatus,
-} from '../data/monitoringMapData';
+import { mapConfig, robot } from '../data/monitoringMapData';
 
-const plotFillByStatus: Record<FieldStatus, string> = {
-  safe: '#18844E',
-  warning: '#F4B526',
-  risk: '#EF4141',
-};
-
-const plotStrokeByStatus: Record<FieldStatus, string> = {
-  safe: 'rgba(220,255,231,0.90)',
-  warning: 'rgba(255,205,76,0.95)',
-  risk: 'rgba(255,210,210,0.95)',
-};
-
-const getDeviceMarkerClass = (device: FieldDevice) => {
-  if (device.type === 'rover') {
-    return 'nawasena-device-marker nawasena-device-marker-rover';
-  }
-
-  if (device.status === 'warning') {
-    return 'nawasena-device-marker nawasena-device-marker-warning';
-  }
-
-  return 'nawasena-device-marker nawasena-device-marker-trap';
-};
-
-const createDeviceIcon = (device: FieldDevice) =>
+const createRobotIcon = (heading: number) =>
   L.divIcon({
     className: 'nawasena-device-icon',
     html: `
-      <div class="${getDeviceMarkerClass(device)}">
-        ${
-          device.type === 'rover'
-            ? '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 15h10l2-4H5l2 4Z" /><path d="M9 11V8h6v3" /><path d="M9 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" /><path d="M15 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" /></svg>'
-            : '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 7v10" /><path d="M8.5 9.5h7" /><path d="M8 13h8" /><path d="M9 17h6" /><path d="M7 11 4.5 8.5" /><path d="M17 11l2.5-2.5" /><path d="M7 15l-2.5 2.5" /><path d="M17 15l2.5 2.5" /></svg>'
-        }
+      <div class="nawasena-device-marker nawasena-device-marker-rover" style="transform: rotate(${heading}deg);">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M12 3l6 16-6-3-6 3 6-16Z" />
+        </svg>
       </div>
     `,
     iconAnchor: [18, 18],
     iconSize: [36, 36],
     popupAnchor: [0, -18],
   });
-
-const createTooltip = (device: FieldDevice) => {
-  if (device.type === 'rover') {
-    return `
-      <div class="nawasena-map-tooltip">
-        <strong>${device.name}</strong>
-        <div>${device.location}</div>
-        <div>${device.statusLabel}</div>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="nawasena-map-tooltip">
-      <strong>${device.name} ${device.statusLabel}</strong>
-      <div>Baterai ${device.battery}%</div>
-      <div>${device.detections ?? 0} Deteksi</div>
-    </div>
-  `;
-};
+const MAX_ZOOM = 19;
+const createRobotTooltip = (heading: number, lat: number, lng: number) => `
+  <div class="nawasena-map-tooltip">
+    <strong>${robot.name}</strong>
+    <div>Lat ${lat.toFixed(6)}, Lon ${lng.toFixed(6)}</div>
+    <div>Heading ${heading}&deg;</div>
+  </div>
+`;
 
 export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) => {
-  const [isReferenceLayerVisible, setIsReferenceLayerVisible] = useState(true);
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const referenceLayerRef = useRef<L.TileLayer | null>(null);
+  const robotMarkerRef = useRef<L.Marker | null>(null);
 
   useEffect(() => {
     if (!mapElementRef.current || mapRef.current) {
@@ -93,7 +41,7 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
     const map = L.map(mapElementRef.current, {
       attributionControl: true,
       center: mapConfig.center,
-      maxZoom: 18,
+      maxZoom: MAX_ZOOM,
       minZoom: 14,
       preferCanvas: true,
       scrollWheelZoom: false,
@@ -105,88 +53,44 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
     mapRef.current = map;
 
     L.tileLayer(
-      'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg',
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
-        attribution: 'Sentinel-2 cloudless &copy; EOX IT Services GmbH',
+        attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics',
         className: 'nawasena-satellite-tile',
-        maxNativeZoom: 14,
-        maxZoom: 18,
+        maxZoom: MAX_ZOOM,
       },
     ).addTo(map);
 
-    const referenceLayer = L.tileLayer(
+    L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',
       {
         className: 'nawasena-label-tile',
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-        maxZoom: 18,
+        maxZoom: MAX_ZOOM,
         opacity: 0.72,
         subdomains: 'abcd',
       },
-    );
+    ).addTo(map);
 
-    referenceLayer.addTo(map);
-    referenceLayerRef.current = referenceLayer;
-
-    fieldPlots.forEach((plot) => {
-      const polygon = L.polygon(plot.coordinates, {
-        color: plotStrokeByStatus[plot.status],
-        dashArray: '8 7',
-        fillColor: plotFillByStatus[plot.status],
-        fillOpacity: plot.status === 'warning' ? 0.22 : 0.2,
-        lineCap: 'round',
-        lineJoin: 'round',
-        opacity: 0.98,
-        weight: 2,
-      }).addTo(map);
-
-      polygon.bindTooltip(
-        `<strong>${plot.name}</strong><span class="nawasena-field-label-status-${plot.status}">${plot.statusLabel}</span>`,
-        {
-          className: 'nawasena-field-label',
-          direction: 'center',
-          permanent: true,
-        },
-      );
-    });
-
-    L.polyline(roverPath, {
-      color: '#38bdf8',
-      dashArray: '10 10',
-      lineCap: 'round',
-      opacity: 0.98,
-      weight: 3.2,
-    }).addTo(map);
-
-    heatPoints.forEach((point) => {
-      L.circle(point.position, {
-        color: 'transparent',
-        fillColor: point.color,
-        fillOpacity: point.opacity,
-        radius: point.radius,
-        stroke: false,
-      }).addTo(map);
-    });
-
-    devices.forEach((device) => {
-      L.marker(device.position, {
-        icon: createDeviceIcon(device),
-        title: device.name,
+    const robotMarker = L.marker(robot.position, {
+      icon: createRobotIcon(robot.heading),
+      title: robot.name,
+    })
+      .bindTooltip(createRobotTooltip(robot.heading, robot.latitude, robot.longitude), {
+        className: 'nawasena-device-tooltip',
+        direction: 'top',
+        offset: [0, -16],
+        opacity: 1,
+        permanent: false,
       })
-        .bindTooltip(createTooltip(device), {
-          className: 'nawasena-device-tooltip',
-          direction: 'top',
-          offset: [0, -16],
-          opacity: 1,
-          permanent: false,
-        })
-        .addTo(map);
-    });
+      .addTo(map);
+
+    robotMarkerRef.current = robotMarker;
 
     return () => {
       map.remove();
       mapRef.current = null;
-      referenceLayerRef.current = null;
+      robotMarkerRef.current = null;
     };
   }, []);
 
@@ -198,31 +102,12 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
     mapRef.current?.zoomOut();
   };
 
-  const handleFocusField = () => {
-    const bounds = L.latLngBounds(fieldPlots.flatMap((plot) => plot.coordinates));
-    mapRef.current?.fitBounds(bounds, {
-      animate: true,
-      padding: [36, 36],
-    });
-  };
-
-  const handleToggleLayer = () => {
-    const map = mapRef.current;
-    const referenceLayer = referenceLayerRef.current;
-
-    if (!map || !referenceLayer) {
-      return;
-    }
-
-    if (map.hasLayer(referenceLayer)) {
-      map.removeLayer(referenceLayer);
-      setIsReferenceLayerVisible(false);
-      return;
-    }
-
-    referenceLayer.addTo(map);
-    setIsReferenceLayerVisible(true);
-  };
+const handleFocusRobot = () => {
+  mapRef.current?.flyTo(robot.position, MAX_ZOOM, {
+    animate: true,
+    duration: 0.6,
+  });
+};
 
   return (
     <div
@@ -234,7 +119,7 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
       ].join(' ')}
     >
       <div
-        aria-label="Peta monitoring sawah Karangtengah"
+        aria-label="Peta posisi robot Karangtengah"
         className={[
           'nawasena-monitoring-map w-full',
           fullBleed
@@ -244,8 +129,8 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
         ref={mapElementRef}
       />
 
-      <div className="pointer-events-none absolute inset-0 z-[500] bg-[linear-gradient(180deg,rgba(8,25,14,0.10),rgba(5,20,12,0.20))]" />
-
+      {/* <div className="pointer-events-none absolute inset-0 z-[500] bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.18))]" /> */}
+      <div className="pointer-events-none absolute inset-0 z-[500] bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.18))]" />
       <div className="absolute left-4 top-1/2 z-[700] grid -translate-y-1/2 overflow-hidden rounded-full border border-white/20 bg-[#091612]/82 p-1 text-white shadow-[0_16px_42px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:left-8">
         <button
           aria-label="Perbesar peta"
@@ -266,49 +151,25 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
           <IconMinus size={20} stroke={1.8} />
         </button>
         <button
-          aria-label="Fokus area petak sawah"
+          aria-label="Fokus ke posisi robot"
           className="grid h-11 w-11 place-items-center rounded-full transition hover:bg-white/12"
-          onClick={handleFocusField}
-          title="Fokus area"
+          onClick={handleFocusRobot}
+          title="Fokus ke robot"
           type="button"
         >
           <IconTarget size={20} stroke={1.8} />
-        </button>
-        <button
-          aria-label="Ganti layer referensi peta"
-          className={[
-            'grid h-11 w-11 place-items-center rounded-full transition hover:bg-white/12',
-            isReferenceLayerVisible ? 'bg-white/8' : '',
-          ].join(' ')}
-          onClick={handleToggleLayer}
-          title="Ganti layer"
-          type="button"
-        >
-          <IconLayersIntersect size={20} stroke={1.8} />
         </button>
       </div>
 
       <div className="absolute bottom-5 left-4 z-[700] flex max-w-[calc(100%-2rem)] flex-wrap items-center gap-4 rounded-full border border-white/18 bg-[#091612]/78 px-4 py-3 text-xs font-semibold text-white shadow-xl shadow-slate-950/25 backdrop-blur-xl sm:left-8">
         <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-3 rounded bg-emerald-400" />
-          Perangkap
-        </span>
-        <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 rounded bg-sky-400" />
-          Rover
+          Posisi robot
         </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-3 rounded bg-emerald-300/70" />
-          Area Aman
+        <span>
+          Lat {robot.latitude.toFixed(6)}, Lon {robot.longitude.toFixed(6)}
         </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-3 rounded bg-yellow-400" />
-          Waspada
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-3 rounded bg-red-500" />
-          Risiko Tinggi
-        </span>
+        <span>Heading {robot.heading}&deg;</span>
       </div>
     </div>
   );

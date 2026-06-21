@@ -43,19 +43,16 @@ export const AdminBeritaPage = (): ReactElement => {
     { label: 'Sorotan Beranda', value: featuredArticle ? 1 : 0, icon: IconStar, accent: 'bg-yellow-100 text-yellow-700' },
   ];
 
-  // Handler Buka Modal untuk Tambah Data Baru
   const handleOpenCreateModal = () => {
-    setEditingArticle(null); // Pastikan null agar modenya CREATE
+    setEditingArticle(null); 
     setIsModalOpen(true);
   };
 
-  // Handler Buka Modal untuk Edit Data Lama
   const handleOpenEditModal = (article: BeritaItem) => {
-    setEditingArticle(article); // Masukkan object artikel agar modenya EDIT
+    setEditingArticle(article);
     setIsModalOpen(true);
   };
 
-// Handler Submit Gabungan (Create / Update) dari Modal
   const handleModalSubmit = async (payload: BeritaPayload, file: File | null) => {
     if (editingArticle) {
       await handleUpdate(editingArticle.id, payload, file);
@@ -63,7 +60,6 @@ export const AdminBeritaPage = (): ReactElement => {
       await handleCreate(payload, file);
     }
   };
-  // Handler Upload Gambar Cover
   const triggerUploadCover = (id: string) => {
     activeUploadId.current = id;
     fileInputRef.current?.click();
@@ -86,10 +82,8 @@ export const AdminBeritaPage = (): ReactElement => {
 
   return (
     <div className="space-y-6">
-      {/* Hidden File Input untuk Upload Cover */}
       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={onFileSelected} />
 
-      {/* Komponen Modal Mantine */}
       <BeritaModal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -98,7 +92,6 @@ export const AdminBeritaPage = (): ReactElement => {
         isSubmitting={isMutating}
       />
 
-      {/* Header Dashboard */}
       <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -117,7 +110,6 @@ export const AdminBeritaPage = (): ReactElement => {
         </div>
       </section>
 
-      {/* Summary Cards */}
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {summary.map((item) => (
           <article className="rounded-lg border border-neutral-200 bg-white p-5 shadow-sm" key={item.label}>
@@ -132,7 +124,6 @@ export const AdminBeritaPage = (): ReactElement => {
         ))}
       </section>
 
-      {/* Main Content Layout */}
       <section className="grid gap-6 xl:grid-cols-[1fr_340px]">
         <div className="rounded-lg border border-neutral-200 bg-white shadow-sm">
           <div className="flex flex-col gap-4 border-b border-neutral-200 p-5 lg:flex-row lg:items-center lg:justify-between">

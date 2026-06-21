@@ -410,7 +410,6 @@ export const DashboardPage = () => {
                 <IconLeaf size={14} stroke={1.9} />
                 <span>Sambutan Kepala Desa</span>
               </p>
-
               <h2 className="leadership-title">
                 Membangun Karang Tengah
                 <br />
@@ -489,9 +488,9 @@ export const DashboardPage = () => {
             <h2 className="service-editorial-title text-4xl font-extrabold leading-tight text-[#101708] sm:text-5xl lg:text-[56px]">
               Urus kebutuhan desa tanpa muter-muter
             </h2>
-            <p className="service-editorial-script mt-1 text-3xl italic leading-none text-[#777777] sm:text-5xl">
+            {/* <p className="service-editorial-script mt-1 text-3xl italic leading-none text-[#777777] sm:text-5xl">
               Dekat, jelas, siap diakses warga
-            </p>
+            </p> */}
           </div>
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -625,25 +624,26 @@ export const DashboardPage = () => {
               {homepageBerita.map((item, index) => (
                 <Link
                   className={[
-                    'group relative block overflow-hidden rounded-[16px] bg-[#101708] shadow-[0_4px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(16,23,8,0.18)]',
+                    'group relative block overflow-hidden rounded-[16px] bg-[#101708] shadow-[0_4px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(16,23,8,0.18)] flex flex-col',
                     index === 0 ? 'md:col-span-2' : '',
                   ].join(' ')}
                   key={item.id}
-                  // Mengarahkan ke rute detail berita secara dinamis menggunakan slug
                   to={`/berita/${item.slug}`}
                 >
-                  <img
-                    alt={item.title}
-                    className={[
-                      'w-full object-cover transition duration-500 group-hover:scale-105',
-                      index === 0
-                        ? 'aspect-[16/9] min-h-[340px] lg:min-h-[380px]'
-                        : 'aspect-[4/3] min-h-[300px]',
-                    ].join(' ')}
-                    // Penyesuaian properti coverUrl dari API publik
-                    src={item.coverUrl || PLACEHOLDER_IMAGE}
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,8,0)_18%,rgba(16,23,8,0.2)_48%,rgba(16,23,8,0.76)_100%)]" />
+                  <div className="relative w-full overflow-hidden bg-[#eef3e8] flex-1">
+                    <img
+                      alt={item.title}
+                      // HAPUS class `min-h-xxx` dan gunakan aspect ratio murni agar proporsional
+                      className={[
+                        'w-full object-cover transition duration-500 group-hover:scale-105',
+                        index === 0
+                          ? 'aspect-[16/9] h-[340px] lg:h-[380px]'
+                          : 'aspect-[4/3] h-[300px]',
+                      ].join(' ')}
+                      src={item.coverUrl || PLACEHOLDER_IMAGE}
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,8,0)_18%,rgba(16,23,8,0.2)_48%,rgba(16,23,8,0.76)_100%)]" />
+                  </div>
 
                   <div
                     className={[
@@ -672,8 +672,7 @@ export const DashboardPage = () => {
                       {item.title}
                     </h3>
                     {index === 0 ? (
-                      <p className="mt-3 max-w-2xl text-sm leading-6 text-white/78">
-                        {/* Penyesuaian properti excerpt dari API publik */}
+                      <p className="mt-3 max-w-2xl text-sm leading-6 text-white/78 line-clamp-2">
                         {item.excerpt || 'Belum ada ringkasan.'}
                       </p>
                     ) : null}

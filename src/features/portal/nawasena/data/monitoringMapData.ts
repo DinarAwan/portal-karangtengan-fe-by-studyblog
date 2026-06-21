@@ -2,6 +2,7 @@ export type Coordinate = [number, number];
 
 export type FieldStatus = 'safe' | 'warning' | 'risk';
 
+
 export type FieldPlot = {
   id: string;
   name: string;
@@ -31,6 +32,19 @@ export type FieldDevice = {
   updatedAt: string;
 };
 
+export type RobotData = {
+  id: string;
+  name: string;
+  position: Coordinate;
+  latitude: number;
+  longitude: number;
+  heading: number;
+  battery: number;
+  connection: ConnectionStatus;
+  signal: string;
+  updatedAt: string;
+};
+
 export type HeatPoint = {
   id: string;
   position: Coordinate;
@@ -40,9 +54,22 @@ export type HeatPoint = {
 };
 
 export const mapConfig = {
-  center: [-7.940955, 110.39475] as Coordinate,
-  zoom: 17,
+  center: [-7.939419, 110.379267] as Coordinate,
+  zoom: 19,
   label: 'Karangtengah, Imogiri, Bantul',
+};
+
+export const robot: RobotData = {
+  id: 'rover-01',
+  name: 'Rover 01',
+  position: [-7.939419, 110.379267],
+  latitude: -7.939419,
+  longitude: 110.379267,
+  heading: 45,
+  battery: 91,
+  connection: 'online',
+  signal: 'Kuat',
+  updatedAt: 'Live',
 };
 
 export const fieldPlots: FieldPlot[] = [

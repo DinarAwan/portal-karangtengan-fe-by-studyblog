@@ -1,5 +1,5 @@
 import api from '../../../../api/axios';
-import type { ScheduleItem, SchedulePayload, ScheduleResponse, SingleScheduleResponse } from '../types/schedule';
+import type { SchedulePayload, ScheduleResponse, SingleScheduleResponse } from '../types/schedule';
 
 export const fetchAdminSchedule = async (): Promise<ScheduleResponse> => {
   const response = await api.get('/v1/cms/schedule');

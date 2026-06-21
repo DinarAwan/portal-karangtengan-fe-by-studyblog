@@ -6,7 +6,6 @@ import type { BeritaItem, BeritaPayload } from '../types/berita';
 type BeritaModalProps = {
   opened: boolean;
   onClose: () => void;
-  // Tambahkan parameter file di fungsi onSubmit
   onSubmit: (payload: BeritaPayload, file: File | null) => Promise<void>;
   initialData?: BeritaItem | null;
   isSubmitting: boolean;

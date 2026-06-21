@@ -1,4 +1,4 @@
-import api from '../../../../api/axios'; // Sesuaikan path dengan lokasi axios kamu
+import api from '../../../../api/axios'; 
 import type { PublicBeritaResponse, SinglePublicBeritaResponse } from '../types/berita';
 
 export const fetchPublicBerita = async (): Promise<PublicBeritaResponse> => {

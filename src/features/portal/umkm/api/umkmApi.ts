@@ -1,4 +1,4 @@
-import api from '../../../../api/axios'; // Sesuaikan path dengan lokasi axios kamu
+import api from '../../../../api/axios'; 
 import type { PublicUmkmResponse } from '../types/umkm';
 
 export const fetchPublicUmkm = async (): Promise<PublicUmkmResponse> => {

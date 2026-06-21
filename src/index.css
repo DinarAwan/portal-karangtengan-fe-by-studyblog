@@ -425,6 +425,31 @@ a {
 .leadership-content {
   animation: leadership-fade-up 0.8s 0.12s ease-out both;
 }
+@media (max-width: 768px) {
+  .leadership-portrait-badge {
+    bottom: 55px;
+    left: 8px;
+
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    max-width: 220px;
+  }
+
+  .leadership-portrait-badge-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .leadership-portrait-badge span span {
+    font-size: 10px;
+  }
+
+  .leadership-portrait-badge strong {
+    font-size: 12px;
+    margin-top: 1px;
+  }
+}
 
 .leadership-eyebrow {
   display: inline-flex;

@@ -33,10 +33,9 @@ export type SingleBeritaResponse = {
   data: BeritaItem;
 };
 
-// Payload untuk POST dan PUT
 export type BeritaPayload = {
   title: string;
   content: string;
   excerpt?: string;
-  coverUrl?: string; // Tambahan jika backend menerima URL cover secara langsung
+  coverUrl?: string; 
 };

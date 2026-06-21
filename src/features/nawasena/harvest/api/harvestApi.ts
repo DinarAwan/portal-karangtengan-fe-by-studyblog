@@ -1,5 +1,5 @@
 import api from '../../../../api/axios';
-import type { HarvestItem, HarvestPayload, HarvestResponse, SingleHarvestResponse } from '../types/harvest';
+import type { HarvestPayload, HarvestResponse, SingleHarvestResponse } from '../types/harvest';
 
 export const fetchAdminHarvest = async (): Promise<HarvestResponse> => {
   const response = await api.get('/v1/cms/harvest');
