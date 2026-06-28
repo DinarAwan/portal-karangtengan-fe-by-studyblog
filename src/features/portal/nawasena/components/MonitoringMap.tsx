@@ -190,28 +190,35 @@ export const MonitoringMap = ({ fullBleed = false }: { fullBleed?: boolean }) =>
         </button>
       </div>
 
-      <div className="absolute bottom-5 left-4 z-[700] flex max-w-[calc(100%-2rem)] flex-wrap items-center gap-4 rounded-full border border-white/18 bg-[#091612]/78 px-4 py-3 text-xs font-semibold text-white shadow-xl shadow-slate-950/25 backdrop-blur-xl sm:left-8">
-        {isLoading && <span>Memuat posisi robot...</span>}
-        {isError && <span className="text-red-300">Gagal memuat data robot</span>}
-        {latestPoint && (
-          <>
-            <span className="inline-flex items-center gap-2">
-              <span
-                className={[
-                  'h-3 w-3 rounded',
-                  latestPoint.gpsFix ? 'bg-sky-400' : 'bg-red-500',
-                ].join(' ')}
-              />
-              {latestPoint.status}
-            </span>
-            <span>
-              Lat {latestPoint.lat.toFixed(6)}, Lon {latestPoint.lng.toFixed(6)}
-            </span>
-            <span>Heading {latestPoint.heading}&deg;</span>
-            <span>{latestPoint.sats} satelit</span>
-          </>
-        )}
-      </div>
+      <div className="absolute bottom-4 left-3 z-[700] flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-2 rounded-full border border-white/18 bg-[#091612]/78 px-3 py-2 text-[10px] font-semibold text-white shadow-xl shadow-slate-950/25 backdrop-blur-xl sm:bottom-5 sm:left-8 sm:gap-4 sm:px-4 sm:py-3 sm:text-xs">
+  {isLoading && <span>Memuat posisi robot...</span>}
+  {isError && <span className="text-red-300">Gagal memuat data robot</span>}
+  {latestPoint && (
+    <>
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span
+          className={[
+            'h-2 w-2 rounded sm:h-3 sm:w-3',
+            latestPoint.gpsFix ? 'bg-sky-400' : 'bg-red-500',
+          ].join(' ')}
+        />
+        {latestPoint.status}
+      </span>
+      {/* Di mobile sembunyikan label "Lat/Lon", tampilkan angka saja lebih ringkas */}
+      <span className="hidden sm:inline">
+        Lat {latestPoint.lat.toFixed(6)}, Lon {latestPoint.lng.toFixed(6)}
+      </span>
+      <span className="sm:hidden">
+        {latestPoint.lat.toFixed(4)}, {latestPoint.lng.toFixed(4)}
+      </span>
+      <span>
+        <span className="hidden sm:inline">Heading </span>
+        {latestPoint.heading}&deg;
+      </span>
+      <span>{latestPoint.sats} <span className="hidden sm:inline">satelit</span><span className="sm:hidden">sat</span></span>
+    </>
+  )}
+</div>
     </div>
   );
 };

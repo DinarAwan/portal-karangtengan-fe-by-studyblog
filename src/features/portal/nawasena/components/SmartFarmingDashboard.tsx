@@ -12,9 +12,12 @@ export const SmartFarmingDashboard = () => {
       <section className="monitoring-map-section relative overflow-hidden bg-[#102A18]">
         <MonitoringMap fullBleed />
 
-        <div className="z-[720] grid gap-3 px-4 py-4 sm:px-6 lg:absolute lg:right-8 lg:top-[106px] lg:w-[330px] lg:px-0 lg:py-0 xl:right-10 xl:w-[350px]">
-          <WeatherPanel onRefresh={handleRefreshWeather} />
-          <DeviceSummaryPanel />
+        {/* Panel cuaca — selalu absolute di atas map, mobile kanan atas kecil, desktop kanan tengah */}
+        <div className="z-[720] absolute right-3 top-27 w-[200px] sm:right-4 sm:top-4 sm:w-[240px] lg:right-8 lg:top-[106px] lg:w-[330px] xl:right-10 xl:w-[350px] grid gap-3">
+          <WeatherPanel onRefresh={handleRefreshWeather} compact />
+          <div className="hidden lg:block">
+            <DeviceSummaryPanel />
+          </div>
         </div>
       </section>
 

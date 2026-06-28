@@ -155,16 +155,16 @@ export const BeritaPage = () => {
           </div>
 
           {isLoading ? (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <div
-                  className="min-h-[340px] animate-pulse rounded-[22px] bg-[#eef3e8]"
+                  className="min-h-[220px] animate-pulse rounded-[16px] bg-[#eef3e8] sm:min-h-[340px] sm:rounded-[22px]"
                   key={`berita-page-skeleton-${index}`}
                 />
               ))}
             </div>
           ) : filteredBerita.length > 0 ? (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
               {filteredBerita.map((item) => (
                 <PublicBeritaCard key={item.id} item={item} />
               ))}

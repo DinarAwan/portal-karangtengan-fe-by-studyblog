@@ -266,7 +266,7 @@ export const DashboardPage = () => {
   const { data: beritaItems, isLoading: isBeritaLoading } = usePublicBerita();
 
   const homepageBerita = useMemo(() => {
-    return beritaItems.slice(0, 5);
+    return beritaItems.slice(0, 6);
   }, [beritaItems]);
 
   return (
@@ -284,8 +284,8 @@ export const DashboardPage = () => {
 
           <div className="relative mx-auto flex min-h-[500px] max-w-[1440px] flex-col justify-center lg:min-h-[500px]">
             <div>
-              <h1 className="hero-editorial-title max-w-[1380px] text-[54px] leading-[0.85] text-[#fff1bf] sm:text-[86px] md:text-[112px] lg:text-[128px] xl:text-[138px]">
-                KARANG TENGAH
+              <h1 className="hero-editorial-title max-w-[1380px] text-[40px] leading-[0.85] text-[#fff1bf] sm:text-[86px] md:text-[112px] lg:text-[128px] xl:text-[138px]">
+                KARANGTENGAH
               </h1>
 
               <div className="mt-5 grid gap-6 lg:relative lg:grid-cols-[0.27fr_0.73fr] lg:items-start">
@@ -298,11 +298,11 @@ export const DashboardPage = () => {
 
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                     <Link
-                      className="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#4f842f] bg-[#4f842f] px-4 text-xs font-bold text-white shadow-[0_10px_24px_rgba(79,132,47,0.24)] ring-1 ring-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#4f842f]/90 sm:text-sm"
+                      className="inline-flex h-10 w-fit items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#4f842f] bg-[#4f842f] px-4 text-xs font-bold shadow-[0_10px_24px_rgba(79,132,47,0.24)] ring-1 ring-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#4f842f]/90 sm:text-sm"
                       to="/infografis"
                     >
-                      See Infografis
-                      <IconArrowRight size={16} />
+                      <span className="text-white">See Infografis</span>
+                      <IconArrowRight size={16}  className="text-white"/>
                     </Link>
 
                     <Link
@@ -315,7 +315,7 @@ export const DashboardPage = () => {
                   </div>
                 </div>
 
-                <p className="hero-editorial-script order-1 text-[46px] italic leading-[0.95] text-[#fff1bf] sm:text-[72px] md:text-[88px] lg:absolute lg:left-[31%] lg:right-0 lg:top-0 lg:order-2 lg:-mt-1 lg:whitespace-nowrap lg:text-right lg:text-[60px] xl:left-[25%] xl:text-[82px]">
+                <p className="hero-editorial-script order-1 text-[28px] leading-[0.95] text-[#fff1bf] sm:text-[72px] md:text-[88px] lg:absolute lg:left-[31%] lg:right-0 lg:top-0 lg:order-2 lg:-mt-1 lg:whitespace-nowrap lg:text-right lg:text-[60px] xl:left-[25%] xl:text-[70px]">
                   Tumbuh bersama warga
                 </p>
               </div>
@@ -488,40 +488,39 @@ export const DashboardPage = () => {
             <h2 className="service-editorial-title text-4xl font-extrabold leading-tight text-[#101708] sm:text-5xl lg:text-[56px]">
               Urus kebutuhan desa tanpa muter-muter
             </h2>
-            {/* <p className="service-editorial-script mt-1 text-3xl italic leading-none text-[#777777] sm:text-5xl">
-              Dekat, jelas, siap diakses warga
-            </p> */}
           </div>
 
-          <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {serviceCards.map((service, index) => (
-              <article
-                className="flex min-h-[390px] flex-col rounded-lg bg-[#F7F7F4] p-5 shadow-[0_10px_30px_rgba(16,23,8,0.05)] ring-1 ring-black/[0.03]"
-                key={service.title}
-              >
-                <div className={index % 2 === 0 ? 'mt-12' : ''}>
-                  <img
-                    alt={service.imageAlt}
-                    className={[
-                      'aspect-[16/10] w-full rounded-md object-cover',
-                      service.imageClassName,
-                    ].join(' ')}
-                    src={service.image}
-                  />
-                </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {serviceCards.map((service, index) => (
+          <article
+            className="flex min-h-[260px] flex-col rounded-lg bg-[#F7F7F4] p-3 shadow-[0_10px_30px_rgba(16,23,8,0.05)] ring-1 ring-black/[0.03] sm:min-h-[390px] sm:p-5"
+            key={service.title}
+          >
+            <div className={index % 2 === 0 ? 'mt-4 sm:mt-12' : ''}>
+              <img
+                alt={service.imageAlt}
+                className={[
+                  'aspect-[16/10] h-[90px] w-full rounded-md object-cover sm:h-auto',
+                  service.imageClassName,
+                ].join(' ')}
+                src={service.image}
+              />
+            </div>
 
-                <h3 className="service-card-title mt-5 text-xl font-bold leading-tight text-[#101708]">
-                  {service.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-[#555555]">
-                  {service.detail}
-                </p>
-              </article>
-            ))}
-          </div>
+            <h3 className="service-card-title mt-3 text-sm font-bold leading-tight text-[#101708] sm:mt-5 sm:text-xl">
+              {service.title}
+            </h3>
+
+            <p className="mt-2 text-xs leading-5 text-[#555555] sm:mt-3 sm:text-sm sm:leading-6">
+              {service.detail}
+            </p>
+          </article>
+        ))}
+      </div>
         </div>
       </section>
 
+      {/* Pertumbuhan Desa */}
       <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div>
@@ -538,14 +537,15 @@ export const DashboardPage = () => {
               lebih mudah dijangkau masyarakat.
             </p>
 
-            <div className="mt-9 grid gap-7 sm:grid-cols-3">
+            <div className="mt-9 grid grid-cols-3 gap-3 sm:gap-7">
               {growthStats.map((item) => (
                 <article className="min-w-0" key={item.label}>
-                  <div className="flex items-center gap-3">
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#72b841]/10 text-[#72b841]">
-                      <item.icon size={26} stroke={1.7} />
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#72b841]/10 text-[#72b841] sm:h-12 sm:w-12">
+                      <item.icon size={18} stroke={1.7} className="sm:hidden" />
+                      <item.icon size={26} stroke={1.7} className="hidden sm:block" />
                     </div>
-                    <div className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap text-4xl font-extrabold leading-none tracking-[0.2px] text-[#27441d] sm:text-[42px] xl:text-5xl">
+                    <div className="flex min-w-0 items-baseline gap-1 text-2xl font-extrabold leading-none tracking-[0.2px] text-[#27441d] sm:gap-1.5 sm:text-[42px] xl:text-5xl">
                       <AnimatedNumber
                         className="inline-block whitespace-nowrap tabular-nums"
                         prefix={item.prefix}
@@ -553,24 +553,24 @@ export const DashboardPage = () => {
                         value={item.value}
                       />
                       {'unit' in item ? (
-                        <span className="text-base font-bold tracking-[0px] text-[#27441d] sm:text-lg">
+                        <span className="text-xs font-bold text-[#27441d] sm:text-lg">
                           {item.unit}
                         </span>
                       ) : null}
                     </div>
                   </div>
-                  <h3 className="mt-4 text-base font-semibold text-[#212529]">
+                  <h3 className="mt-2 text-[11px] font-semibold leading-tight text-[#212529] sm:mt-4 sm:text-base">
                     {item.label}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-[#6C757D]">
-                    {item.detail}
-                  </p>
+            <p className="mt-1 text-[10px] leading-4 text-[#6C757D] sm:mt-2 sm:text-sm sm:leading-6">
+              {item.detail}
+            </p>
                 </article>
               ))}
             </div>
           </div>
 
-          <div className="relative min-h-[420px] overflow-hidden rounded-[36px] bg-white">
+          <div className="relative min-h-[420px] overflow-hidden rounded-[36px] bg-white -top-10">
             <div className="absolute inset-x-8 bottom-8 top-28 rounded-[32px] bg-[linear-gradient(180deg,#72b841_0%,#5fa333_100%)]" />
             <div className="absolute -right-20 top-8 h-64 w-64 rounded-full bg-[#e9efdc]/80 blur-3xl" />
             <img
@@ -592,7 +592,7 @@ export const DashboardPage = () => {
                 <IconPlant2 className="text-[#72b841]" size={18} />
                 Artikel dan Berita
               </p>
-              <h2 className="mt-3 text-3xl font-bold leading-tight text-[#212529] sm:text-4xl">
+              <h2 className="mt-3 text-2xl font-bold leading-tight text-[#212529] sm:text-4xl">
                 Kabar Karang Tengah terkini
               </h2>
             </div>
@@ -606,82 +606,38 @@ export const DashboardPage = () => {
           </div>
 
           {isBeritaLoading ? (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, index) => (
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
                 <div
-                  className={[
-                    'animate-pulse rounded-[16px] bg-[#eef3e8]',
-                    index === 0
-                      ? 'min-h-[340px] md:col-span-2 lg:min-h-[380px]'
-                      : 'min-h-[300px]',
-                  ].join(' ')}
+                  className="animate-pulse rounded-[16px] bg-[#eef3e8] min-h-[220px] sm:min-h-[300px]"
                   key={`berita-skeleton-${index}`}
                 />
               ))}
             </div>
           ) : homepageBerita.length > 0 ? (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {homepageBerita.map((item, index) => (
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-6 md:grid-cols-3">
+              {homepageBerita.slice(0, 6).map((item) => (
                 <Link
-                  className={[
-                    'group relative block overflow-hidden rounded-[16px] bg-[#101708] shadow-[0_4px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(16,23,8,0.18)] flex flex-col',
-                    index === 0 ? 'md:col-span-2' : '',
-                  ].join(' ')}
+                  className="group relative block overflow-hidden rounded-[14px] sm:rounded-[16px] bg-[#101708] shadow-[0_4px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(16,23,8,0.18)] flex flex-col"
                   key={item.id}
                   to={`/berita/${item.slug}`}
                 >
-                  <div className="relative w-full overflow-hidden bg-[#eef3e8] flex-1">
+                  {/* Gambar */}
+                  <div className="relative w-full overflow-hidden bg-[#eef3e8]">
                     <img
                       alt={item.title}
-                      // HAPUS class `min-h-xxx` dan gunakan aspect ratio murni agar proporsional
-                      className={[
-                        'w-full object-cover transition duration-500 group-hover:scale-105',
-                        index === 0
-                          ? 'aspect-[16/9] h-[340px] lg:h-[380px]'
-                          : 'aspect-[4/3] h-[300px]',
-                      ].join(' ')}
+                      className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
                       src={item.coverUrl || PLACEHOLDER_IMAGE}
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,8,0)_18%,rgba(16,23,8,0.2)_48%,rgba(16,23,8,0.76)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,8,0)_18%,rgba(16,23,8,0.15)_48%,rgba(16,23,8,0.55)_100%)]" />
                   </div>
 
-                  <div
-                    className={[
-                      'absolute',
-                      index === 0
-                        ? 'inset-x-0 bottom-0 p-6 text-white sm:p-8'
-                        : 'inset-x-3 bottom-3 rounded-[14px] bg-white/88 p-5 text-[#101708] shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-md',
-                    ].join(' ')}
-                  >
-                    <p
-                      className={[
-                        'text-[11px] font-semibold uppercase tracking-[0.14em]',
-                        index === 0 ? 'text-white/88' : 'text-[#212529]/70',
-                      ].join(' ')}
-                    >
-                      {item.category || 'Umum'}
-                    </p>
-                    <h3
-                      className={[
-                        'mt-2 font-bold leading-tight',
-                        index === 0
-                          ? 'max-w-xl text-2xl text-white sm:text-3xl'
-                          : 'line-clamp-2 text-lg text-[#101708]',
-                      ].join(' ')}
-                    >
+                  {/* Box info — transparan buram */}
+                  <div className="absolute inset-x-2 bottom-2 rounded-[11px] bg-white/70 p-3 text-[#101708] shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md sm:inset-x-3 sm:bottom-3 sm:rounded-[14px] sm:p-5">
+                    <h3 className="mt-1 line-clamp-2 text-[10px] font-bold leading-tight text-[#101708] sm:mt-2 sm:text-lg">
                       {item.title}
                     </h3>
-                    {index === 0 ? (
-                      <p className="mt-3 max-w-2xl text-sm leading-6 text-white/78 line-clamp-2">
-                        {item.excerpt || 'Belum ada ringkasan.'}
-                      </p>
-                    ) : null}
-                    <p
-                      className={[
-                        'mt-3 text-sm',
-                        index === 0 ? 'text-white/80' : 'text-[#6C757D]',
-                      ].join(' ')}
-                    >
+                    <p className="mt-1 text-[6px] text-[#6C757D] sm:mt-3 sm:text-sm">
                       {formatBeritaDate(item.publishedAt)}
                     </p>
                   </div>
@@ -697,6 +653,8 @@ export const DashboardPage = () => {
           )}
         </div>
       </section>
+
+
     </div>
   );
 };
